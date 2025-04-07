@@ -43,7 +43,6 @@ variable "username" {
 variable "password" {
   type        = string
   description = "The OpenStack password."
-  default     = "lnx4vm"
 }
 
 variable "tenant_name" {
