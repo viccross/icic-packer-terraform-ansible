@@ -40,7 +40,7 @@ output "network_name" {
 
 output "openstack_flavour_id" {
   description = "The ID of the OpenStack image"
-  value       = data.openstack_flavors_flavor_v2.small.id
+  value       = data.openstack_flavors_flavor_v2.size.id
 }
 
 output "openstack_image_id" {
