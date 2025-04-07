@@ -8,6 +8,9 @@ brew install ansible
 ```
 
 ```zsh
-packer init .
-packer validate .
+cd packer
+export PKR_VAR_password="<icic password>"
+./packer init .
+./packer validate .
+./packer build .
 ```
