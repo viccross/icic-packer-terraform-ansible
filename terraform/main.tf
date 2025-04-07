@@ -18,7 +18,7 @@ resource "random_id" "instance_suffix" {
   keepers = {
     # Any changes to these values will generate a new ID
     image_id  = data.openstack_images_image_v2.img.id
-    flavor_id = data.openstack_flavors_flavor_v2.small.id
+    flavor_id = data.openstack_compute_flavor_v2.size.id
     network   = data.openstack_networking_network_v2.network.name
     # Add other fields that should trigger a new instance when changed
   }
