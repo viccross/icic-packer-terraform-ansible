@@ -16,5 +16,20 @@ variable "ssh_username" {
   default = "ubuntu"
 }
 
-variable "" {
+variable "availability_zone" {
+  type        = string
+  description = "The availability zone where the build will be performed."
+  default     = null #openstack availability zone required
+}
+
+variable "flavor" {
+  type        = string
+  description = "The flavor (instance type) to use for the build."
+  default     = "m1.small"
+}
+
+variable "security_groups" {
+  type        = list(string)
+  description = "List of security groups to apply to the build instance."
+  default     = ["default"]
 }

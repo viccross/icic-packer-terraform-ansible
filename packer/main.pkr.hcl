@@ -27,10 +27,12 @@ locals {
 
 
 source "openstack" "infra_cloud_center" {
+  identity_endpoint = var.identity_endpoint
+  insecure = var.insecure
   availability_zone    = var.availability_zone
   flavor               = var.flavor
   image_name           = local.build_name
-  security_groups      = local.security_groups
+  security_groups      = var.security_groups
   source_image_name    = var.source_image_name
   ssh_username         = var.ssh_username
 }
