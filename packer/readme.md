@@ -9,7 +9,7 @@ brew install ansible
 
 ```zsh
 cd packer
-export PKR_VAR_password="<icic password>"
+export PKR_VAR_password="<ICIC/Openstack password>"
 ./packer init .
 ./packer validate .
 ./packer build .
