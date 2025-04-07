@@ -46,6 +46,12 @@ variable "password" {
   default     = "lnx4vm"
 }
 
+variable "domain_name" {
+  type        = string
+  description = "The OpenStack domain name."
+  default     = "IBM-Default"
+}
+
 variable "insecure" {
   type        = bool
   description = "Whether to skip SSL verification."

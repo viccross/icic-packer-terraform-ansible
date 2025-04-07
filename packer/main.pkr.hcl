@@ -23,6 +23,7 @@ source "openstack" "infra_cloud_center" {
   identity_endpoint = var.identity_endpoint
   username = var.username
   password = var.password
+  domain_name = var.domain_name
   insecure = var.insecure
   availability_zone    = var.availability_zone
   flavor               = var.flavor
