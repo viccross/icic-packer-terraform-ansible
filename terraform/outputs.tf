@@ -1,6 +1,6 @@
 output "vm_name" {
   description = "The name of the OpenStack instance created"
-  value       = "${var.environment}-${var.project}-${var.instance_purpose}-${random_id.instance_suffix.hex}"
+  value       = "${var.project}${var.environment}${var.instance_purpose}${random_id.instance_suffix.hex}"
 }
 
 output "network_name" {
