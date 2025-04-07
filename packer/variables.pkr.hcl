@@ -46,10 +46,16 @@ variable "password" {
   default     = "lnx4vm"
 }
 
+variable "tenant_name" {
+  type        = string
+  description = "The OpenStack tenant name."
+  default     = "ibm-default"
+}
+
 variable "domain_name" {
   type        = string
   description = "The OpenStack domain name."
-  default     = "IBM-Default"
+  default     = "Default"
 }
 
 variable "insecure" {
