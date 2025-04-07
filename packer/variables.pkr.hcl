@@ -34,6 +34,17 @@ variable "identity_endpoint" {
   default     = "https://icicmgt1.z.stg.ibm/icic/openstack/identity/v3"
 }
 
+variable "username" {
+  type        = string
+  description = "The OpenStack username."
+  default     = "root"
+}
+
+variable "password" {
+  type        = string
+  description = "The OpenStack password."
+}
+
 variable "insecure" {
   type        = bool
   description = "Whether to skip SSL verification."

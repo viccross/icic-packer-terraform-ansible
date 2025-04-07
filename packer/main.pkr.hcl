@@ -21,6 +21,8 @@ locals {
 
 source "openstack" "infra_cloud_center" {
   identity_endpoint = var.identity_endpoint
+  username = var.username
+  password = var.password
   insecure = var.insecure
   availability_zone    = var.availability_zone
   flavor               = var.flavor
