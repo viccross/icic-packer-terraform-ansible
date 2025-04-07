@@ -1,7 +1,7 @@
 variable "source_image_name" {
   type        = string
   description = "Name of the source image to use for the build."
-  default = "ubuntu-22.04"
+  default =  "zrhimg1"
 }
 
 variable "build_name" {
@@ -13,7 +13,7 @@ variable "build_name" {
 variable "ssh_username" {
   type        = string
   description = "SSH username for the build."
-  default = "ubuntu"
+  default = "root"
 }
 
 variable "availability_zone" {
@@ -25,11 +25,23 @@ variable "availability_zone" {
 variable "flavor" {
   type        = string
   description = "The flavor (instance type) to use for the build."
-  default     = "m1.small"
+  default     = "tiny"
 }
 
-variable "security_groups" {
-  type        = list(string)
-  description = "List of security groups to apply to the build instance."
-  default     = ["default"]
+variable "identity_endpoint" {
+  type        = string
+  description = "The OpenStack identity endpoint."
+  default     = "https://icicmgt1.z.stg.ibm/icic/openstack/identity/v3"
 }
+
+variable "insecure" {
+  type        = bool
+  description = "Whether to skip SSL verification."
+  default     = true
+}
+
+# variable "security_groups" {
+#   type        = list(string)
+#   description = "List of security groups to apply to the build instance."
+#   default     = ["default"]
+# }
