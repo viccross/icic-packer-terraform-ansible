@@ -24,6 +24,21 @@ packer {
 #   timestamp = formatdate("YYYY-MM-DD_hh-mm-ss", timestamp())
 #   ami_name  = "${var.ami_name}_${local.timestamp}"
 # }
+locals {
+  build_name = var.build_name == null ? "${var.os_name}-${var.os_version}" : var.build_name
+}
+
+source "openstack" "vm" {
+  availability_zone    = var.availability_zone
+  flavor               = var.flavor
+  image_name           = local.build_name
+  security_groups      = local.security_groups
+  source_image_name    = var.source_image_name
+  ssh_username         = var.ssh_username
+}
+
+
+
 
 # source "amazon-ebs" "img" {
 #   ami_name      = local.ami_name
