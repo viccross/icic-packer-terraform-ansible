@@ -1,7 +1,7 @@
 ## Variables file
 
-/* variable "namespace" {
-  description = "(Optional) - Namespace that will be used for the configuration"
+variable "openstack_password" {
+  description = "OpenStack password"
   type        = string
-  default     = null
-} */
+  default     = "password"
+}
