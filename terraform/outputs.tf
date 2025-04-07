@@ -1,6 +1,14 @@
-## Place your outputs here for your module
+output "network_name" {
+  description = "The name of the OpenStack network"
+  value       = data.openstack_networking_network_v2.network.name
+}
 
-/* output "output-example" {
-  value       = vault_policy.policies
-  description = "Sample helm values file that contains all of the configured paths that were created with this module. This should be used a reference and not a raw input to another object"
-} */
+output "openstack_flavour_id" {
+  description = "The ID of the OpenStack flavour"
+  value       = data.openstack_compute_flavor_v2.size.id
+}
+
+output "openstack_image_id" {
+  description = "The ID of the OpenStack image"
+  value       = data.openstack_images_image_v2.img.id
+}
