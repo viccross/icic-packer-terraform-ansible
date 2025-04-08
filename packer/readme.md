@@ -9,8 +9,15 @@ brew install ansible
 
 ##
 ```zsh
+
+# Ubuntu
 apt-add-repository --yes --update ppa:ansible/ansible
 apt-get install -y ansible
+
+#Centos
+sudo yum update -y
+sudo yum install epel-release
+sudo yum install ansible
 ```
 
 
