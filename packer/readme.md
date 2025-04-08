@@ -7,6 +7,13 @@ brew install hashicorp/tap/packer
 brew install ansible
 ```
 
+##
+```zsh
+apt-add-repository --yes --update ppa:ansible/ansible
+apt-get install -y ansible
+```
+
+
 ```zsh
 cd packer
 export PKR_VAR_password="<ICIC/Openstack password>"
