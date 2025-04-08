@@ -1,0 +1,8 @@
+- name: Vault Configuration
+  hosts: all
+  become: true
+  gather_facts: false
+  tasks:
+    - name: "Include Vualt tasks"
+      include_tasks: vault.yml
+

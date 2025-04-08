@@ -31,4 +31,5 @@ resource "openstack_compute_instance_v2" "instance_rhl_wxk" {
   network {
     name = "${data.openstack_networking_network_v2.network.name}"
   }
+  availability_zone = var.availability_zone
 }
