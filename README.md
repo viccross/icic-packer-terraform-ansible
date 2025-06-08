@@ -38,6 +38,26 @@ As a verification proof-point, the HAProxy coniguration uses the `phpinfo()` pag
 ## Running the demo
 If you have the pre-requisite resources, you can give the demo a try.
 
+### Stage 0: Setup
+
+- Make sure your ICIC user-ID has an associated SSH key pair defined.
+  When logged-on to ICIC, click your user name (and project) in the top-right of the screen.
+  From the menu that appears, select "Key pairs".
+  If you have a key that is listed here and is usable from the machine you will run the demo from, make a note of the name of the key-pair.
+  If none of the listed key-pairs is usable from the machine you will run the demo from, or there are no key-pairs listed, do the following:
+  - Generate an SSH key using an appropriate method for your OS.
+    For example on Linux or macOS use the `ssh-keygen` command.
+    If you already have other SSH keys, make sure you don't destroy an existing key by generating a new one over the top of an existing one!
+  - Display the public key of the generated key-pair, and copy it to the clipboard.
+    The public key is contained in a file with the name you specified for the private key but with `.pub` appended.
+    For example, the default name for an ED25519 key on Linux is `~/.ssh/id_ed25519`.
+    The public key for that key-pair would be found at `~/.ssh/id_ed25519.pub`.
+  - On the ICIC interface under "Key Pairs", click on "Import Public Key".
+  - Paste the public key into the "Public Key" field.
+  - In the "Key pair name" field, type a convenient name for the key-pair.
+    Make a note of the name, as you will need it for the Terraform configuration.
+  - Press the "Import Key Pair" button to save the key-pair into ICIC.
+
 - Clone the repository:
   ```
   $ git clone https://github.com/viccross/icic-packer-terraform-ansible.git
