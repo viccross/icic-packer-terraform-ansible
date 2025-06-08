@@ -17,9 +17,9 @@ module "zvm_haproxy_guests" {
   image_timestamp = var.image_timestamp
 }
 
-resource "null_resource" "haproxy_config" {
-  depends_on = [module.zvm_httpd_guests.httpd_instances, module.zvm_haproxy_guests.haproxy_instances]
-  provisioner "local-exec" {
-    command = "ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook -i '${module.zvm_haproxy_guests.vm1.ip_address},' -u root --private-key ~/.ssh/id_ed25519 --extra-vars \"$(terraform output -json)\" ansible/playbook.yml"
-  }
-}
+# resource "null_resource" "haproxy_config" {
+#   depends_on = [module.zvm_httpd_guests.httpd_instances, module.zvm_haproxy_guests.haproxy_instances]
+#   provisioner "local-exec" {
+#     command = "ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook -i '${module.zvm_haproxy_guests.vm1.ip_address},' -u root --private-key ~/.ssh/id_ed25519 --extra-vars \"$(terraform output -json)\" ansible/playbook.yml"
+#   }
+# }
