@@ -1,19 +1,10 @@
-output "vm_name" {
-  description = "The name of the OpenStack instance created"
-  value       = "${var.project}${var.environment}${var.instance_purpose}${random_id.instance_suffix.hex}"
+output "httpd_instances" {
+  description = "Full instance details"
+  value       = module.zvm_httpd_guests
 }
 
-output "network_name" {
-  description = "The name of the OpenStack network"
-  value       = data.openstack_networking_network_v2.network.name
+output "haproxy_instances" {
+  description = "Full instance details"
+  value       = module.zvm_haproxy_guests
 }
 
-output "openstack_flavour_id" {
-  description = "The ID of the OpenStack flavour"
-  value       = data.openstack_compute_flavor_v2.size.id
-}
-
-output "openstack_image_id" {
-  description = "The ID of the OpenStack image"
-  value       = data.openstack_images_image_v2.img.id
-}

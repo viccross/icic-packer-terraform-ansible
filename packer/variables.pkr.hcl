@@ -1,25 +1,25 @@
 variable "source_image_name" {
   type        = string
   description = "Name of the source image to use for the build."
-  default =  "zrhimg1"
+  default     = "zrhimg1"
 }
 
 variable "build_name" {
   type        = string
   description = "Name of the build."
-  default = null 
+  default     = null
 }
 
 variable "ssh_username" {
   type        = string
   description = "SSH username for the build."
-  default = "root"
+  default     = "root"
 }
 
 variable "availability_zone" {
   type        = string
   description = "The availability zone where the build will be performed."
-  default     = null #openstack availability zone required
+  default     = "Default Group" #openstack availability zone required
 }
 
 variable "flavor" {
@@ -68,3 +68,8 @@ variable "insecure" {
 #   description = "List of security groups to apply to the build instance."
 #   default     = ["default"]
 # }
+
+variable "networks" {
+  type    = list(string)
+  default = ["f0159cc1-07ea-4adb-be06-a454fa467d03"]
+}

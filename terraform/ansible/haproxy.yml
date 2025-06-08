@@ -1,0 +1,24 @@
+- name: Generate the HAProxy config
+  set_fact:
+    haproxy_content: "{{ lookup('template', 'templates/haproxy.cfg.j2') }}"
+  vars:
+    query: "[values(@)]|[]"
+
+- name: Add custom HAProxy configuration
+  blockinfile:
+    dest: /etc/haproxy/haproxy.cfg
+    insertafter: EOF
+    content: '{{ haproxy_content }}'
+
+- name: Update FirewallD
+  firewalld:
+    service: http
+    state: enabled
+    immediate: true
+    permanent: true
+
+- name: Restart HAProxy
+  systemd:
+    service: haproxy
+    state: restarted
+

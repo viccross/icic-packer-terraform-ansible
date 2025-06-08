@@ -1,35 +1,25 @@
-data "openstack_images_image_v2" "img" {
-  name        = "zrhimg1"
-  most_recent = true
-}
 
-#
-data "openstack_compute_flavor_v2" "size" {
-  name = "tiny"
-}
+module "zvm_httpd_guests" {
+  source = "./modules/icic_httpd_vm"
+  for_each = var.httpd_guests
 
-data "openstack_networking_network_v2" "network" {
-  name = "StLeoLAN75"
+  name = each.value.name
+  image_timestamp = var.image_timestamp
+  depends_on = [module.zvm_haproxy_guests.haproxy_instances]
 }
 
 
-resource "random_id" "instance_suffix" {
-  byte_length = 3
-  keepers = {
-    # Any changes to these values will generate a new ID
-    image_id  = data.openstack_images_image_v2.img.id
-    flavor_id = data.openstack_compute_flavor_v2.size.id
-    network   = data.openstack_networking_network_v2.network.name
-    # Add other fields that should trigger a new instance when changed
+module "zvm_haproxy_guests" {
+  source = "./modules/icic_haproxy_vm"
+  for_each = var.haproxy_guests
+
+  name = each.value.name
+  image_timestamp = var.image_timestamp
+}
+
+resource "null_resource" "haproxy_config" {
+  depends_on = [module.zvm_httpd_guests.httpd_instances, module.zvm_haproxy_guests.haproxy_instances]
+  provisioner "local-exec" {
+    command = "ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook -i '${module.zvm_haproxy_guests.vm1.ip_address},' -u root --private-key ~/.ssh/id_ed25519 --extra-vars \"$(terraform output -json)\" ansible/playbook.yml"
   }
-}
-
-resource "openstack_compute_instance_v2" "instance_rhl_wxk" {
-  name      = "${var.project}${var.environment}${var.instance_purpose}${random_id.instance_suffix.hex}"
-  image_id  = data.openstack_images_image_v2.img.id
-  flavor_id = data.openstack_compute_flavor_v2.size.id
-  network {
-    name = "${data.openstack_networking_network_v2.network.name}"
-  }
-  availability_zone = var.availability_zone
 }

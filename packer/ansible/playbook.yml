@@ -1,8 +1,11 @@
-- name: Vault Configuration
+- name: Apache Configuration
   hosts: all
   become: true
   gather_facts: false
   tasks:
-    - name: "Include Vualt tasks"
-      include_tasks: vault.yml
-
+    - name: "Include HTTPD tasks"
+      include_tasks: httpd.yml
+      when: "'httpd' in lookup('ansible.builtin.env', 'MY_BUILD_NAME')"
+    - name: "Include HAProxy tasks"
+      include_tasks: haproxy.yml
+      when: "'haproxy' in lookup('ansible.builtin.env', 'MY_BUILD_NAME')"

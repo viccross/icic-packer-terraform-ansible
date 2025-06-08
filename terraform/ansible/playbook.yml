@@ -1,0 +1,8 @@
+- name: HAProxy Configuration
+  hosts: all
+  become: true
+  gather_facts: false
+  tasks:
+    - name: "Include HAProxy tasks"
+      include_tasks: haproxy.yml
+

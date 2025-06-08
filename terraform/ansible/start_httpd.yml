@@ -1,0 +1,10 @@
+- name: HAProxy Configuration
+  hosts: all
+  become: true
+  gather_facts: false
+  tasks:
+    - name: "Start Apache"
+      systemd:
+        service: httpd
+        state: started
+
