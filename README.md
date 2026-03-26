@@ -7,6 +7,11 @@ The demo has three components:
 - Infrastructure deployment using Terraform
 - Post-deployment configuration using Ansible
 
+A fourth component is being introduced: a Jenkins pipeline to drive the Terraform and post-Terraform Ansible stages.
+At present this pipeline is static in my local Jenkins instance, but I may integrate it into this repo so that the "Pipeline script from SCM" configuration in Jenkins can be used.
+
+More about the Jenkins pipeline can be found in [JENKINS.md](JENKINS.md).
+
 ## Requirements
 This demo depends on a local installation of Terraform, Packer, and Ansible.
 It makes use of IBM Cloud Infrastructure Center through the OpenStack providers in Packer and Terraform.
