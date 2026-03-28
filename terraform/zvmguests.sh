@@ -66,12 +66,17 @@ tfservers=$(TF_CLI_CONFIG_FILE=.terraform.rc /opt/go/bin/terraform output -json 
 guests=$(curl -s -k https://icicmgt1.z.stg.ibm:8774/v2.1/205d7f7dc28c4de692df3acc7439485f/servers/detail \
         -H "X-Auth-Token: ${authtoken}" \
         | jq -r --argjson tfservers "[${tfservers}]" ' .servers[] | select([.name] | inside($tfservers)) | "\(.name) \(.["OS-EXT-SRV-ATTR:instance_name"])"' )
+if [[ -z "$guests" ]]; then
+    guests="No deployed guests found."
+fi
 
 if [[ "$action" == "web" ]]; then
     echo "<html><head><title>z/VM Guests in Terraform</title></head><body>" > zvmguests.html
     echo "<h1>z/VM Guests in Terraform</h1><p>The z/VM guests currently managed by Terraform are listed below:</p>" >> zvmguests.html
     echo "<pre>" >> zvmguests.html
-    (echo "${header}" && echo "${guests}") | column -t >> zvmguests.html
+    if [[ -n "${guests}" ]]; then
+        (echo "${header}" && echo "${guests}") | column -t >> zvmguests.html
+    fi
     echo '</pre><h2>Terraform graph:</h2><div style="display: flex;">' >> zvmguests.html
     TF_CLI_CONFIG_FILE=.terraform.rc /opt/go/bin/terraform graph | dot -Tsvg >> zvmguests.html
     echo "</div>" >> zvmguests.html
