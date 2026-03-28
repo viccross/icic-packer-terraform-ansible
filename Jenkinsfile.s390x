@@ -1,0 +1,84 @@
+pipeline {
+  agent any
+
+  stages {
+    stage('Git checkout') {
+      steps {
+        git branch: 'main', url: 'https://github.com/viccross/icic-packer-terraform-ansible.git'
+      }
+    }
+    stage("Tell terraform where to find provider") {
+      steps {
+        sh '''
+          #!/bin/bash
+          cd terraform
+          cat <<EOFTFRC > .terraform.rc
+provider_installation {
+  dev_overrides {
+    "registry.terraform.io/terraform-provider-openstack/openstack" = "/opt/go/bin/"
+  }
+  direct {}
+}
+EOFTFRC
+        '''
+      }
+    }
+    stage("Terraform plan") {
+      steps {
+        withCredentials([usernamePassword( credentialsId: '7f7bb04e-3d80-4a05-aa54-fae70f1b5200', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
+          ansiColor('xterm') {
+            sh '''
+              cd terraform && export TF_CLI_CONFIG_FILE=.terraform.rc
+              /opt/go/bin/terraform plan -var "openstack_password=${PASSWORD}"
+            '''
+          }
+        }
+      }
+    }
+    stage("Terraform action") {
+      steps {
+        withCredentials([usernamePassword( credentialsId: '7f7bb04e-3d80-4a05-aa54-fae70f1b5200', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
+          ansiColor('xterm') {
+            sh '''
+              export PATH=/opt/go/bin:${PATH}
+              cd terraform && export TF_CLI_CONFIG_FILE=.terraform.rc
+              /opt/go/bin/terraform ${action} --auto-approve -var "openstack_password=${PASSWORD}"
+            '''
+          }
+        }
+      }
+    }
+    stage("Configure HAProxy") {
+      when {
+        expression { params.action == 'apply' } //
+      }
+      steps {
+        ansiColor('xterm') {
+          sh '''
+            cd terraform
+            ANSIBLE_HOST_KEY_CHECKING=false ansible-playbook -i 10.2.75.200, --extra-vars "$(/opt/go/bin/terraform output -json)" -u root ansible/playbook.yml
+          '''
+        }
+      }
+    }
+    stage("Generate HTML") {
+      steps {
+        ansiColor('xterm') {
+          sh '''
+            mkdir -p reports
+            cd terraform
+            bash zvmguests.sh -w
+            mv zvmguests.html ../reports/
+          '''
+        }
+        publishHTML (target : [allowMissing: false,
+          alwaysLinkToLastBuild: false,
+          keepAll: false,
+          reportDir: 'reports',
+          reportFiles: 'zvmguests.html',
+          reportName: 'Terraform infrastructure',
+          reportTitles: 'Terraform Report'])
+      }
+    }
+  }
+}
