@@ -6,10 +6,9 @@ The demo has three components:
 - Image creation using Packer (and Ansible)
 - Infrastructure deployment using Terraform
 - Post-deployment configuration using Ansible
+- A Jenkins pipeline to drive the Terraform and post-Terraform Ansible stages
 
-A fourth component is being introduced: a Jenkins pipeline to drive the Terraform and post-Terraform Ansible stages.
-At present this pipeline is static in my local Jenkins instance, but I may integrate it into this repo so that the "Pipeline script from SCM" configuration in Jenkins can be used.
-
+The Jenkins pipeline has been integrated into this repo so that the "Pipeline script from SCM" configuration in Jenkins can be used.
 More about the Jenkins pipeline can be found in [JENKINS.md](JENKINS.md).
 
 ## Requirements
