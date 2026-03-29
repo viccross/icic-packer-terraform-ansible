@@ -61,8 +61,7 @@ guests=$(curl -s -k https://icicmgt1.z.stg.ibm:8774/v2.1/205d7f7dc28c4de692df3ac
         -H "X-Auth-Token: ${authtoken}" \
         | jq -r --argjson tfservers "[${tfservers}]" ' .servers[] | select([.name] | inside($tfservers)) | "\(.name) \(.["OS-EXT-SRV-ATTR:instance_name"])"' )
 if [[ -z "$guests" ]]; then
-    guests="No deployed guests found."
-    header=""
+    header="No deployed guests found."
 else
     lbip=$(TF_CLI_CONFIG_FILE=.terraform.rc /opt/go/bin/terraform output haproxy_instances -json | jq -r '.vm1.ip_address')
 fi
@@ -74,14 +73,16 @@ if [[ "$action" == "web" ]]; then
     echo "<title>z/VM Guests by Terraform and ICIC</title></head><body>" >> zvmguests.html
     echo "<h1>z/VM Guests by Terraform and ICIC</h1><p>The z/VM guests currently managed by Terraform are listed below:</p>" >> zvmguests.html
     echo "<pre>" >> zvmguests.html
-    if [[ -n "${guests}" ]]; then
-        (echo "${header}" && echo "${guests}") | column -t >> zvmguests.html
-    fi
+    (echo "${header}" && echo "${guests}") | column -t >> zvmguests.html
     echo "</pre>" >> zvmguests.html
-    echo "<h2>Demo pages</h2><ul>" >> zvmguests.html
-    echo "<li>HAProxy <a href=\"http://${lbip}:8404/stats\">stats page</a></li>" >> zvmguests.html
-    echo "<li>Sophisticated PHP-based web app <a href=\"http://${lbip}/phpinfo.php\">demo page</a></li>" >> zvmguests.html
-    echo "</ul>" >> zvmguests.html
+    echo "<h2>Demo pages</h2>" >> zvmguests.html
+    if [[ -n "${guests}" ]]; then
+        echo "<ul><li>HAProxy <a href=\"http://${lbip}:8404/stats\">stats page</a></li>" >> zvmguests.html
+        echo "<li>Sophisticated PHP-based web app <a href=\"http://${lbip}/phpinfo.php\">demo page</a></li>" >> zvmguests.html
+        echo "</ul>" >> zvmguests.html
+    else
+        echo "<li>No guests deployed, so no demo pages available.</li></ul>" >> zvmguests.html
+    fi
     echo '<h2>Terraform graph:</h2><div style="display: flex;">' >> zvmguests.html
     TF_CLI_CONFIG_FILE=.terraform.rc /opt/go/bin/terraform graph | dot -Tsvg >> zvmguests.html
     echo "</div>" >> zvmguests.html
