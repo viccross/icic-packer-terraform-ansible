@@ -3,11 +3,11 @@
 usage() {
     echo "Usage: $0 [OPTIONS]"
     echo "Options:"
-    echo "  -h, --help          Show this help message and exit"
-    echo "  -u, --user          Specify a user for ICIC authentication"
-    echo "  -p, --password      Specify a password for ICIC authentication"
-    echo "      --no-headers    Do not print the header row"
-    echo "  -w, --web           Create a web page with the output instead of printing to the console"
+    echo "  -h, --help           Show this help message and exit"
+    echo "  -u, --user USER      Specify a user for ICIC authentication"
+    echo "  -p, --password PASS  Specify a password for ICIC authentication"
+    echo "      --no-headers     Do not print the header row"
+    echo "  -w, --web            Create a web page with full output"
 }
 
 header="NAME z/VM-ID"
@@ -42,7 +42,7 @@ while true; do
                 shift 2
                 continue
             else
-                echo "Error: --user requires a value."
+                echo "Error: provide a user."
                 exit 2
             fi
         ;;
@@ -52,7 +52,7 @@ while true; do
                 shift 2
                 continue
             else
-                echo "Error: --password requires a value."
+                echo "Error: provide a password."
                 exit 2
             fi
         ;;
