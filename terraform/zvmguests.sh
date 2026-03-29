@@ -63,7 +63,7 @@ guests=$(curl -s -k https://icicmgt1.z.stg.ibm:8774/v2.1/205d7f7dc28c4de692df3ac
 if [[ -z "$guests" ]]; then
     header="No deployed guests found."
 else
-    lbip=$(TF_CLI_CONFIG_FILE=.terraform.rc /opt/go/bin/terraform output haproxy_instances -json | jq -r '.vm1.ip_address')
+    lbip=$(TF_CLI_CONFIG_FILE=.terraform.rc /opt/go/bin/terraform output -json haproxy_instances | jq -r '.vm1.ip_address')
 fi
 
 if [[ "$action" == "web" ]]; then
