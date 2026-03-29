@@ -68,7 +68,7 @@ EOFTFRC
             sh '''
               mkdir -p reports
               cd terraform
-              bash zvmguests.sh -w -u ${USERNAME} -p ${PASSWORD} zvmguests.html
+              bash zvmguests.sh -w -u ${USERNAME} -p ${PASSWORD}
               mv zvmguests.html ../reports/
             '''
           }
