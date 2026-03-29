@@ -70,9 +70,9 @@ fi
 if [[ "$action" == "web" ]]; then
     echo "<!DOCTYPE html>" > zvmguests.html
     echo "<html lang=\"en\"><head><meta charset=\"UTF-8\">" >> zvmguests.html
-    echo "<style>body { font-family: Arial, sans-serif; margin: 20px; } h1 { color: #333; } pre { background-color: #f4f4f4; padding: 10px; border-radius: 5px; } a { color: #007BFF; text-decoration: none; } a:hover { text-decoration: underline; }</style>" >> zvmguests.html
-    echo "<title>z/VM Guests in Terraform</title></head><body>" >> zvmguests.html
-    echo "<h1>z/VM Guests in Terraform</h1><p>The z/VM guests currently managed by Terraform are listed below:</p>" >> zvmguests.html
+    echo "<style>body { font-family: \"IBM Plex Sans\", Helvetica, Arial, sans-serif; margin: 20px; } h1 { color: #333; } pre { background-color: #f4f4f4; padding: 10px; border-radius: 5px; } a { color: #007BFF; text-decoration: none; } a:hover { text-decoration: underline; }</style>" >> zvmguests.html
+    echo "<title>z/VM Guests by Terraform and ICIC</title></head><body>" >> zvmguests.html
+    echo "<h1>z/VM Guests by Terraform and ICIC</h1><p>The z/VM guests currently managed by Terraform are listed below:</p>" >> zvmguests.html
     echo "<pre>" >> zvmguests.html
     if [[ -n "${guests}" ]]; then
         (echo "${header}" && echo "${guests}") | column -t >> zvmguests.html
