@@ -4,13 +4,15 @@ usage() {
     echo "Usage: $0 [OPTIONS]"
     echo "Options:"
     echo "  -h, --help          Show this help message and exit"
+    echo "  -u, --user          Specify a user for ICIC authentication"
+    echo "  -p, --password      Specify a password for ICIC authentication"
     echo "      --no-headers    Do not print the header row"
     echo "  -w, --web           Create a web page with the output instead of printing to the console"
 }
 
 header="NAME z/VM-ID"
 
-if ! TEMP="$(getopt -o 'hw' -l 'no-headers,help,web' -n "zvmguests" -- "$@")"; then
+if ! TEMP="$(getopt -o 'hu:p:w' -l 'no-headers,help,user:,password:,web' -n "zvmguests" -- "$@")"; then
     usage
     exit 99
 fi
@@ -34,6 +36,26 @@ while true; do
             usage
             exit 1
         ;;
+        '-u'|'--user')
+            if [[ -n $2 ]]; then
+                user="$2"
+                shift 2
+                continue
+            else
+                echo "Error: --user requires a value."
+                exit 2
+            fi
+        ;;
+        '-p'|'--password')
+            if [[ -n $2 ]]; then
+                password="$2"
+                shift 2
+                continue
+            else
+                echo "Error: --password requires a value."
+                exit 2
+            fi
+        ;;
         '--')
             if [[ -n $2 ]]; then
                 echo "Extra parameter(s) provided!"
@@ -51,9 +73,9 @@ authtoken=$(curl -s -k -i https://icicmgt1.z.stg.ibm:5000/v3/auth/tokens \
   -H "Content-Type: application/json" \
   -H "Vary: X-Auth-Token, X-Subject-Token" \
   -H "Accept: application/json" \
-  -d '{"auth":{"scope":{"project":{"domain":{"name":"Default"},"name":"ibm-default"}},
-       "identity":{"password":{"user":{"domain":{"name":"Default"},"password":"lnx4vm","name":"root"}},"methods":["password"]}}
-}' | grep -i X-Subject-Token | awk '{print $2;}' )
+  -d "{\"auth\":{\"scope\":{\"project\":{\"domain\":{\"name\":\"Default\"},\"name\":\"ibm-default\"}},
+       \"identity\":{\"password\":{\"user\":{\"domain\":{\"name\":\"Default\"},\"password\":\"${password}\",\"name\":\"${user}\"}},\"methods\":[\"password\"]}}
+}" | grep -i X-Subject-Token | awk '{print $2;}' )
 
 tfservers=$(TF_CLI_CONFIG_FILE=.terraform.rc /opt/go/bin/terraform output -json | jq '.[].value |.[]| .vm_name '| paste -sd, -)
 
