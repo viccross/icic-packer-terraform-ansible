@@ -68,16 +68,26 @@ guests=$(curl -s -k https://icicmgt1.z.stg.ibm:8774/v2.1/205d7f7dc28c4de692df3ac
         | jq -r --argjson tfservers "[${tfservers}]" ' .servers[] | select([.name] | inside($tfservers)) | "\(.name) \(.["OS-EXT-SRV-ATTR:instance_name"])"' )
 if [[ -z "$guests" ]]; then
     guests="No deployed guests found."
+else
+    lbip=$(TF_CLI_CONFIG_FILE=.terraform.rc /opt/go/bin/terraform output haproxy_instances -json | jq -r '.vm1.ip_address')
 fi
 
 if [[ "$action" == "web" ]]; then
-    echo "<html><head><title>z/VM Guests in Terraform</title></head><body>" > zvmguests.html
+    echo "<!DOCTYPE html>" > zvmguests.html
+    echo "<html lang=\"en\"><head><meta charset=\"UTF-8\">" >> zvmguests.html
+    echo "<style>body { font-family: Arial, sans-serif; margin: 20px; } h1 { color: #333; } pre { background-color: #f4f4f4; padding: 10px; border-radius: 5px; } a { color: #007BFF; text-decoration: none; } a:hover { text-decoration: underline; }</style>" >> zvmguests.html
+    echo "<title>z/VM Guests in Terraform</title></head><body>" >> zvmguests.html
     echo "<h1>z/VM Guests in Terraform</h1><p>The z/VM guests currently managed by Terraform are listed below:</p>" >> zvmguests.html
     echo "<pre>" >> zvmguests.html
     if [[ -n "${guests}" ]]; then
         (echo "${header}" && echo "${guests}") | column -t >> zvmguests.html
     fi
-    echo '</pre><h2>Terraform graph:</h2><div style="display: flex;">' >> zvmguests.html
+    echo "</pre>" >> zvmguests.html
+    echo "<h2>Demo pages</h2><ul>" >> zvmguests.html
+    echo "<li>HAProxy <a href=\"http://${lbip}:8404/stats\">stats page</a></li>" >> zvmguests.html
+    echo "<li>Sophisticated PHP-based web app <a href=\"http://${lbip}/phpinfo.php\">demo page</a></li>" >> zvmguests.html
+    echo "</ul>" >> zvmguests.html
+    echo '<h2>Terraform graph:</h2><div style="display: flex;">' >> zvmguests.html
     TF_CLI_CONFIG_FILE=.terraform.rc /opt/go/bin/terraform graph | dot -Tsvg >> zvmguests.html
     echo "</div>" >> zvmguests.html
     echo "<p>Generated on $(date)</p>" >> zvmguests.html
