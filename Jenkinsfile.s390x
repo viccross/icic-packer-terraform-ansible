@@ -63,13 +63,15 @@ EOFTFRC
     }
     stage("Generate HTML") {
       steps {
-        ansiColor('xterm') {
-          sh '''
-            mkdir -p reports
-            cd terraform
-            bash zvmguests.sh -w
-            mv zvmguests.html ../reports/
-          '''
+        withCredentials([usernamePassword( credentialsId: '7f7bb04e-3d80-4a05-aa54-fae70f1b5200', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
+          ansiColor('xterm') {
+            sh '''
+              mkdir -p reports
+              cd terraform
+              bash zvmguests.sh -w -u ${USERNAME} -p ${PASSWORD} zvmguests.html
+              mv zvmguests.html ../reports/
+            '''
+          }
         }
         publishHTML (target : [allowMissing: false,
           alwaysLinkToLastBuild: false,
