@@ -5,14 +5,13 @@ usage() {
     echo "Options:"
     echo "  -h, --help          Show this help message and exit"
     echo "      --no-headers    Do not print the header row"
-    echo "  -s, --status        Print the status of the VMs instead of their z/VM IDs"
     echo "  -w, --web           Create a web page with the output instead of printing to the console"
 }
 
 header="NAME z/VM-ID"
 
-if ! TEMP="$(getopt -o 'hsw' -l 'no-headers,help,status,web' -n "zvmguests" -- "$@")"; then
-    echo "Terminating."
+if ! TEMP="$(getopt -o 'hw' -l 'no-headers,help,web' -n "zvmguests" -- "$@")"; then
+    usage
     exit 99
 fi
 
@@ -34,11 +33,6 @@ while true; do
         '-h'|'--help')
             usage
             exit 1
-        ;;
-        '-s'|'--status')
-            action="isq"
-            shift
-            continue
         ;;
         '--')
             if [[ -n $2 ]]; then
@@ -68,6 +62,7 @@ guests=$(curl -s -k https://icicmgt1.z.stg.ibm:8774/v2.1/205d7f7dc28c4de692df3ac
         | jq -r --argjson tfservers "[${tfservers}]" ' .servers[] | select([.name] | inside($tfservers)) | "\(.name) \(.["OS-EXT-SRV-ATTR:instance_name"])"' )
 if [[ -z "$guests" ]]; then
     guests="No deployed guests found."
+    header=""
 else
     lbip=$(TF_CLI_CONFIG_FILE=.terraform.rc /opt/go/bin/terraform output haproxy_instances -json | jq -r '.vm1.ip_address')
 fi
