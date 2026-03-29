@@ -75,14 +75,14 @@ if [[ "$action" == "web" ]]; then
     echo "<pre>" >> zvmguests.html
     (echo "${header}" && echo "${guests}") | column -t >> zvmguests.html
     echo "</pre>" >> zvmguests.html
-    echo "<h2>Demo pages</h2>" >> zvmguests.html
+    echo "<h2>Demo pages</h2><ul>" >> zvmguests.html
     if [[ -n "${guests}" ]]; then
-        echo "<ul><li>HAProxy <a href=\"http://${lbip}:8404/stats\">stats page</a></li>" >> zvmguests.html
+        echo "<li>HAProxy <a href=\"http://${lbip}:8404/stats\">stats page</a></li>" >> zvmguests.html
         echo "<li>Sophisticated PHP-based web app <a href=\"http://${lbip}/phpinfo.php\">demo page</a></li>" >> zvmguests.html
-        echo "</ul>" >> zvmguests.html
     else
-        echo "<li>No guests deployed, so no demo pages available.</li></ul>" >> zvmguests.html
+        echo "<li>No guests deployed, so no demo pages available.</li>" >> zvmguests.html
     fi
+    echo "</ul>" >> zvmguests.html
     echo '<h2>Terraform graph:</h2><div style="display: flex;">' >> zvmguests.html
     TF_CLI_CONFIG_FILE=.terraform.rc /opt/go/bin/terraform graph | dot -Tsvg >> zvmguests.html
     echo "</div>" >> zvmguests.html
