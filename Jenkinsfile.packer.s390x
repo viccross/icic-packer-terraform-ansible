@@ -1,0 +1,37 @@
+pipeline {
+  agent any
+
+  stages {
+    stage('Git checkout') {
+      steps {
+        git branch: 'main', url: 'https://github.com/viccross/icic-packer-terraform-ansible.git'
+      }
+    }
+    stage("Packer validate and list plugins") {
+      steps {
+        withCredentials([usernamePassword( credentialsId: '7f7bb04e-3d80-4a05-aa54-fae70f1b5200', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
+          ansiColor('xterm') {
+            sh '''
+              cd packer && export PKR_VAR_password="${PASSWORD}"
+              /opt/go/bin/packer plugins installed
+              /opt/go/bin/packer validate .
+            '''
+          }
+        }
+      }
+    }
+    stage("Packer build") {
+      steps {
+        withCredentials([usernamePassword( credentialsId: '7f7bb04e-3d80-4a05-aa54-fae70f1b5200', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
+          ansiColor('xterm') {
+            sh '''
+              export PATH=/opt/go/bin:${PATH}
+              cd packer && export PKR_VAR_password="${PASSWORD}"
+              /opt/go/bin/packer build .
+            '''
+          }
+        }
+      }
+    }
+  }
+}
