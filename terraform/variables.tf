@@ -34,7 +34,7 @@ variable "haproxy_guests" {
 
   default = {
     vm1 = {
-      name = "haproxy-1"
+      name = "haproxy-vault"
     }
   }
 }
