@@ -23,12 +23,13 @@ EOFTFRC
         '''
       }
     }
-    stage("Terraform plan") {
+    stage("Terraform init and plan") {
       steps {
         withCredentials([usernamePassword( credentialsId: '7f7bb04e-3d80-4a05-aa54-fae70f1b5200', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
           ansiColor('xterm') {
             sh '''
               cd terraform && export TF_CLI_CONFIG_FILE=.terraform.rc
+              /opt/go/bin/terraform init
               /opt/go/bin/terraform plan -var "openstack_password=${PASSWORD}"
             '''
           }
