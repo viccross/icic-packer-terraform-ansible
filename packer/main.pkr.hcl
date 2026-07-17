@@ -15,7 +15,7 @@ packer {
 
 locals {
   timestamp  = formatdate("YYYY-MM-DD_hh-mm-ss", timestamp())
-  httpd_build_name = "${var.source_image_name}_httpd_${local.timestamp}"
+  vault_build_name = "${var.source_image_name}_vault_${local.timestamp}"
   haproxy_build_name = "${var.source_image_name}_haproxy_${local.timestamp}"
 }
 
@@ -61,11 +61,13 @@ build {
   }
 
   source "source.openstack.infra_cloud_center" {
-    name       = "httpd_build"
-    image_name = local.httpd_build_name
+    name       = "vault_build"
+    image_name = local.vault_build_name
   }
-  source "source.openstack.infra_cloud_center" {
-    name       = "haproxy_build"
-    image_name = local.haproxy_build_name
+# No need to build a haproxy image... but it means we always need
+#   "most_recent", or separate image tags for vault and haproxy
+#  source "source.openstack.infra_cloud_center" {
+#    name       = "haproxy_build"
+#    image_name = local.haproxy_build_name
   }
 }

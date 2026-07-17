@@ -11,19 +11,19 @@ variable "openstack_password" {
   type        = string
 }
 
-variable "httpd_guests" {
+variable "vault_guests" {
   description = "Definitions of the Apache VMs needed"
   type = map(any)
 
   default = {
     vm1 = {
-      name = "httpd-1"
+      name = "vault-1"
     },
     vm2 = {
-      name = "httpd-2"
+      name = "vault-2"
     },
     vm3 = {
-      name = "httpd-3"
+      name = "vault-3"
     }
   }
 }

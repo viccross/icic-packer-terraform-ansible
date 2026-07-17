@@ -1,10 +1,33 @@
 ---
 - name: Install Vault
   become: true
-  apt:
-    name: vault-enterprise
-    state: present
-    update_cache: yes
+  ansible.builtin.copy:
+    src: /home/jenkins/go/bin/vault
+    dest: /usr/local/bin/vault
+    mode: '0755'
+    owner: root
+    group: root
+
+- name: Create Vault systemd service
+  become: true
+  ansible.builtin.template:
+    src: templates/vault.service.j2
+    dest: /usr/local/lib/systemd/system/vault.service
+    mode: '0644'
+    owner: root
+    group: root
+
+- name: Reload systemd daemon
+  become: true
+  ansible.builtin.systemd:
+    daemon_reload: true
+
+- name: Disable Vault service for now
+  become: true
+  ansible.builtin.systemd:
+    name: vault
+    enabled: false
+    state: stopped
 
 - name: Allow Vault to restart its systemd job
   lineinfile:

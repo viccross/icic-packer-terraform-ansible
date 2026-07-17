@@ -4,5 +4,4 @@
   gather_facts: false
   tasks:
     - name: "Include HAProxy tasks"
-      include_tasks: haproxy.yml
-
+      ansible.builtin.include_tasks: haproxy.yml

@@ -1,5 +1,5 @@
 data "openstack_images_image_v2" "img" {
-  name_regex  = "^zrhimg1_httpd_.*"
+  name_regex  = "^zrhimg1_vault_.*"
   most_recent = true
 }
 
@@ -38,6 +38,6 @@ resource "openstack_compute_instance_v2" "zvm_instance" {
   }
 
   provisioner "local-exec" {
-    command = "ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook -i '${self.access_ip_v4},' -u root --private-key ~/.ssh/id_ed25519 --extra-vars \"$(terraform output -json)\" ansible/start_httpd.yml"
+    command = "ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook -i '${self.access_ip_v4},' -u root --private-key ~/.ssh/id_ed25519 --extra-vars \"$(terraform output -json)\" ansible/deploy_vault.yml"
   }
 }

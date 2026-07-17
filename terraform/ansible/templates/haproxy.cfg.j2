@@ -1,12 +1,13 @@
 
-      frontend tf_demo_http
-        mode http
+      frontend tf_demo_vault
+        mode tcp
         option tcplog
-        bind *:80
-        default_backend tf_httpd
+        bind *:8200
+        default_backend tf_vault
 
-      backend tf_httpd
-        mode http
-        option httpchk GET /phpinfo.php
-      {% for guest in httpd_instances.value | json_query(query) %}  server {{ guest.vm_name }} {{ guest.ip_address }}:80 check
+      backend tf_vault
+        mode tcp
+        option tcplog
+        balance roundrobin
+      {% for guest in vault_instances.value | json_query(query) %}  server {{ guest.vm_name }} {{ guest.ip_address }}:8200 check
       {% endfor %}
