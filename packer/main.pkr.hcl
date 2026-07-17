@@ -69,5 +69,5 @@ build {
 #  source "source.openstack.infra_cloud_center" {
 #    name       = "haproxy_build"
 #    image_name = local.haproxy_build_name
-  }
+#  }
 }
