@@ -9,3 +9,6 @@
     - name: "Include HAProxy tasks"
       include_tasks: haproxy.yml
       when: "'haproxy' in lookup('ansible.builtin.env', 'MY_BUILD_NAME')"
+    - name: "Include Vault tasks"
+      include_tasks: vault.yml
+      when: "'vault' in lookup('ansible.builtin.env', 'MY_BUILD_NAME')"
