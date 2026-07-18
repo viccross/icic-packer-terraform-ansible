@@ -11,7 +11,7 @@
     content: '{{ haproxy_content }}'
 
 - name: Update FirewallD
-  ansible.builtin.firewalld:
+  ansible.posix.firewalld:
     port: 8200/tcp
     state: enabled
     immediate: true
