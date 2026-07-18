@@ -1,23 +1,23 @@
 - name: Generate the HAProxy config
-  set_fact:
+  ansible.builtin.set_fact:
     haproxy_content: "{{ lookup('template', 'templates/haproxy.cfg.j2') }}"
   vars:
-    query: "[values(@)]|[]"
+    jsonquery: "[values(@)]|[]"
 
 - name: Add custom HAProxy configuration
-  blockinfile:
+  ansible.builtin.blockinfile:
     dest: /etc/haproxy/haproxy.cfg
     insertafter: EOF
     content: '{{ haproxy_content }}'
 
 - name: Update FirewallD
-  firewalld:
+  ansible.builtin.firewalld:
     port: 8200/tcp
     state: enabled
     immediate: true
     permanent: true
 
 - name: Restart HAProxy
-  systemd:
+  ansible.builtin.systemd:
     service: haproxy
     state: restarted
