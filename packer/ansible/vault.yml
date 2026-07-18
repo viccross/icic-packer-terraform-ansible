@@ -8,6 +8,15 @@
     owner: root
     group: root
 
+- name: Ensure path for Vault systemd service
+  become: true
+  ansible.builtin.file:
+    path: /usr/local/lib/systemd/system
+    state: directory
+    mode: '0755'
+    owner: root
+    group: root
+
 - name: Create Vault systemd service
   become: true
   ansible.builtin.template:
@@ -28,11 +37,3 @@
     name: vault
     enabled: false
     state: stopped
-
-- name: Allow Vault to restart its systemd job
-  ansible.builtin.lineinfile:
-    path: /etc/sudoers
-    state: present
-    insertafter: '^# User privilege specification'
-    line: 'vault   ALL=(ALL) NOPASSWD: /bin/systemctl restart vault.service'
-    validate: 'visudo -cf %s'
