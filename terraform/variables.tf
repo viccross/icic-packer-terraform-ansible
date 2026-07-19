@@ -47,3 +47,7 @@ variable "haproxy_guests" {
   }
 }
 
+variable "leader_ip" {
+  type    = string
+  default = ""
+}
