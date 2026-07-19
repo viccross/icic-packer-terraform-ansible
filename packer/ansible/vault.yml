@@ -1,4 +1,24 @@
 ---
+- name: Install dependencies
+  ansible.builtin.package:
+    name:
+      - curl
+      - unzip
+      - libcap
+    state: present
+
+- name: Create Vault directories
+  ansible.builtin.file:
+    path: "{{ item }}"
+    state: directory
+    owner: root
+    group: root
+    mode: "0750"
+  loop:
+    - "/etc/vault.d"
+    - "/opt/vault/data"
+    - "/var/log/vault"
+
 - name: Install Vault
   become: true
   ansible.builtin.copy:
@@ -7,6 +27,11 @@
     mode: '0755'
     owner: root
     group: root
+
+- name: Set IPC_LOCK capability on Vault binary
+  ansible.builtin.command:
+    cmd: "setcap cap_ipc_lock=+ep /usr/local/bin/vault"
+  changed_when: true
 
 - name: Ensure path for Vault systemd service
   become: true
@@ -37,3 +62,11 @@
     name: vault
     enabled: false
     state: stopped
+
+- name: Enable Vault firewall rules
+  become: true
+  ansible.posix.firewalld:
+    port: 8200-8201/tcp
+    immediate: true
+    permanent: true
+    state: enabled

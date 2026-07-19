@@ -11,14 +11,22 @@ variable "openstack_password" {
   type        = string
 }
 
-variable "vault_guests" {
-  description = "Definitions of the Apache VMs needed"
+variable "vault_leader_guests" {
+  description = "Definitions of the Vault leader VMs needed"
   type = map(any)
 
   default = {
     vm1 = {
       name = "vault-1"
-    },
+    }
+  }
+}
+
+variable "vault_follower_guests" {
+  description = "Definitions of the Vault follower VMs needed"
+  type = map(any)
+
+  default = {
     vm2 = {
       name = "vault-2"
     },

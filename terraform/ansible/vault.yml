@@ -1,0 +1,24 @@
+- name: Vault Configuration
+  hosts: all
+  become: true
+  gather_facts: false
+  tasks:
+    - name: "Include Vault leader tasks"
+      ansible.builtin.include_tasks: vault_leader.yml
+      vars:
+        vault_install_dir: /usr/local/bin
+        vault_config_dir: /etc/vault.d
+        vault_data_dir: /opt/vault/data
+        vault_log_dir: /var/log/vault
+        vault_tls_disable: true
+      when: inventory_hostname == 'vault-1'
+    - name: "Include Vault follower tasks"
+      ansible.builtin.include_tasks: vault_follower.yml
+      vars:
+        vault_install_dir: /usr/local/bin
+        vault_config_dir: /etc/vault.d
+        vault_data_dir: /opt/vault/data
+        vault_log_dir: /var/log/vault
+        vault_tls_disable: true
+        vault_leader_addr: "{{ hostvars['vault-1'].ansible_default_ipv4.address }}:8200"
+      when: inventory_hostname != 'vault-1'

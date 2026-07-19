@@ -1,0 +1,69 @@
+---
+
+# ── Configure ────────────────────────────────────────────────
+- name: Create Vault config file
+  ansible.builtin.copy:
+    dest: "{{ vault_config_dir }}/vault.hcl"
+    owner: root
+    group: root
+    mode: '0640'
+    content: |
+      storage "raft" {
+        path    = "{{ vault_data_dir }}"
+        node_id = "zvault1"
+      }
+
+      listener "tcp" {
+        address     = "0.0.0.0:8200"
+        tls_disable = {{ vault_tls_disable | lower }}
+      }
+
+      api_addr     = "http://{{ ansible_default_ipv4.address }}:8200"
+      cluster_addr = "http://{{ ansible_default_ipv4.address }}:8201"
+      license_path = "{{ vault_config_dir }}/vault.hclic"
+      disable_mlock = false
+      ui = true
+
+      log_level = "info"
+      log_file  = "{{ vault_log_dir }}/vault.log"
+
+    # ── Firewall ─────────────────────────────────────────────────
+- name: Start firewalld if not running
+  ansible.builtin.systemd:
+    name: firewalld
+    state: started
+    enabled: true
+  failed_when: false
+
+# ── Start Service ────────────────────────────────────────────
+- name: Enable and start Vault
+  ansible.builtin.systemd:
+    name: vault
+    enabled: true
+    state: started
+
+# ── Verify ───────────────────────────────────────────────────
+- name: Wait for Vault to be reachable
+  ansible.builtin.uri:
+    url: "http://{{ ansible_default_ipv4.address }}:8200/v1/sys/health"
+    method: GET
+    status_code: [200, 429, 472, 473, 501, 503]
+  register: vault_health
+  retries: 10
+  delay: 3
+  until: vault_health.status in [200, 429, 472, 473, 501, 503]
+
+- name: Show Vault status
+  ansible.builtin.debug:
+    msg: >
+      Vault is reachable at http://{{ ansible_default_ipv4.address }}:8200
+      Status code: {{ vault_health.status }}
+      {% if vault_health.status == 501 %}
+      ⚠️  Vault is NOT yet initialized. Run:
+          vault operator init
+      {% elif vault_health.status == 503 %}
+      ⚠️  Vault is sealed. Run:
+          vault operator unseal
+      {% else %}
+      ✅ Vault is initialized and unsealed.
+      {% endif %}

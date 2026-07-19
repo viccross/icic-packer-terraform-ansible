@@ -37,5 +37,5 @@ variable "password" {
 
 variable "ip_address" {
   type    = string
-  default = "10.2.75.200"
+  default = "10.2.75.201"
 }

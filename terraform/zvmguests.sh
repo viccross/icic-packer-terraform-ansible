@@ -100,7 +100,7 @@ if [[ "$action" == "web" ]]; then
     echo "<h2>Demo pages</h2><ul>" >> zvmguests.html
     if [[ -n "${guests}" ]]; then
         echo "<li>HAProxy <a href=\"http://${lbip}:8404/stats\">stats page</a></li>" >> zvmguests.html
-        echo "<li>Sophisticated PHP-based web app <a href=\"http://${lbip}/phpinfo.php\">demo page</a></li>" >> zvmguests.html
+        echo "<li>Vault <a href=\"http://${lbip}:8200\">interface</a></li>" >> zvmguests.html
     else
         echo "<li>No guests deployed, so no demo pages available.</li>" >> zvmguests.html
     fi
