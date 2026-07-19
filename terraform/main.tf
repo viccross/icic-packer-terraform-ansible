@@ -21,5 +21,5 @@ module "zvm_vault_follower_guests" {
 
   name = each.value.name
   image_timestamp = var.image_timestamp
-  leader_ip = module.zvm_vault_leader_guest["vm1"].ip_address
+  leader_ip = module.zvm_vault_leader_guests["vm1"].ip_address
 }
