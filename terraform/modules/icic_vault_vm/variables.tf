@@ -29,3 +29,8 @@ variable "availability_zone" {
   type		= string
   default = "Default Group"
 }
+
+variable "leader_ip" {
+  type    = string
+  default = ""
+}
