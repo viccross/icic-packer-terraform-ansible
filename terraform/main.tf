@@ -12,6 +12,7 @@ module "zvm_vault_leader_guests" {
 
   name = each.value.name
   image_timestamp = var.image_timestamp
+  am_i_leader = true
 #  depends_on = [module.zvm_haproxy_guests.haproxy_instances]
 }
 

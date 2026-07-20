@@ -34,3 +34,8 @@ variable "leader_ip" {
   type    = string
   default = ""
 }
+
+variable "am_i_leader" {
+  type    = bool
+  default = false
+}

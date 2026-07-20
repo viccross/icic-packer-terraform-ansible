@@ -20,5 +20,4 @@
         vault_data_dir: /opt/vault/data
         vault_log_dir: /var/log/vault
         vault_tls_disable: true
-        vault_leader_addr: "{{ hostvars['vault-1'].ansible_default_ipv4.address }}:8200"
       when: inventory_hostname != 'vault-1'
