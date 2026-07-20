@@ -38,10 +38,10 @@ resource "openstack_compute_instance_v2" "zvm_instance" {
   }
 
   provisioner "local-exec" {
-    command = var.am_i_leader ? "echo 'Leader here!' && ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook -i '${self.access_ip_v4},' -u root --private-key ~/.ssh/id_ed25519 --extra-vars \"$(terraform output -json)\" ansible/vault.yml" : "true"
+    command = var.am_i_leader ? "echo 'Leader here!' && ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook -i '${self.access_ip_v4},' -u root --private-key ~/.ssh/id_ed25519 --extra-vars \"$(terraform output -json)\" ansible/vault_leader.yml" : "true"
   }
 
   provisioner "local-exec" {
-    command = var.am_i_leader ? "true" : "echo 'Follower here!' && ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook -i '${self.access_ip_v4},' -u root --private-key ~/.ssh/id_ed25519 --extra-vars \"$(terraform output -json)\" --extra-vars \"vault_leader_addr=${var.leader_ip}\" ansible/vault.yml"
+    command = var.am_i_leader ? "true" : "echo 'Follower here!' && ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook -i '${self.access_ip_v4},' -u root --private-key ~/.ssh/id_ed25519 --extra-vars \"$(terraform output -json)\" --extra-vars \"vault_leader_addr=${var.leader_ip}\" ansible/vault_follower.yml"
   }
 }
