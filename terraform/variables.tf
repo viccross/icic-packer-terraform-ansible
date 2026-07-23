@@ -17,7 +17,7 @@ variable "vault_leader_guests" {
 
   default = {
     vm1 = {
-      name = "vault-1"
+      name = "demo-vault-1"
     }
   }
 }
@@ -28,10 +28,10 @@ variable "vault_follower_guests" {
 
   default = {
     vm2 = {
-      name = "vault-2"
+      name = "demo-vault-2"
     },
     vm3 = {
-      name = "vault-3"
+      name = "demo-vault-3"
     }
   }
 }
@@ -42,7 +42,7 @@ variable "haproxy_guests" {
 
   default = {
     vm1 = {
-      name = "haproxy-vault"
+      name = "demo-vault-haproxy"
     }
   }
 }
