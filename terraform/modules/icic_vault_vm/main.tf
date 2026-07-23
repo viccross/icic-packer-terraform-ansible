@@ -38,7 +38,7 @@ resource "openstack_compute_instance_v2" "zvm_instance" {
   }
 
   provisioner "local-exec" {
-    command = var.am_i_leader ? "echo 'Leader here!' && ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook -i '${self.access_ip_v4},' -u root --private-key ~/.ssh/id_ed25519 --extra-vars \"$(terraform output -json)\" ansible/vault_leader.yml" : "true"
+    command = var.am_i_leader ? "echo 'Leader here!' && ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook -i '${self.access_ip_v4},' -u root --private-key ~/.ssh/id_ed25519 --extra-vars \"vault_leader_addr=${self.access_ip_v4}\" ansible/vault_leader.yml" : "true"
   }
 
   provisioner "local-exec" {
