@@ -27,6 +27,11 @@ variable "project" {
 
 variable "availability_zone" {
   type		= string
+  default = "Default Group"
+}
+
+variable "hypervisor_hostname" {
+  type    = string
   default = "ASG1VM2"
 }
 

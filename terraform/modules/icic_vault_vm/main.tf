@@ -24,6 +24,7 @@ resource "openstack_compute_instance_v2" "zvm_instance" {
     name = "${data.openstack_networking_network_v2.network.name}"
   }
   availability_zone = var.availability_zone
+  hypervisor_hostname = var.hypervisor_hostname
   key_pair  = data.openstack_compute_keypair_v2.my_keypair.name
 
   connection {
