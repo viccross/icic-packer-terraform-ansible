@@ -107,7 +107,7 @@
       environment:
         VAULT_ADDR: "http://{{ my_ip_addr }}:8200"
       become: true
-      loop: "{{ vault_init_output.content.unseal_keys }}"
+      loop: "{{ (vault_init_output.content | b64decode | from_yaml).unseal_keys }}"
       loop_control:
         label: "Sensitive data hidden!"
       when: vault_health.status == 503
