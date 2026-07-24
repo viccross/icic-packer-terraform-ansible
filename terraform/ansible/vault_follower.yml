@@ -97,6 +97,10 @@
       delegate_to: "{{ vault_leader_addr }}"
       register: vault_init_output
 
+    - name: Debug vault init output
+      ansible.builtin.debug:
+        msg: "{{ vault_init_output.content | b64decode }}"
+
     - name: Unseal Vault if sealed
       ansible.builtin.command:
         cmd: "{{ vault_install_dir }}/vault operator unseal {{ item }}"
