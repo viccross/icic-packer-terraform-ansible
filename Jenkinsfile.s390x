@@ -56,7 +56,7 @@ EOFTFRC
         ansiColor('xterm') {
           sh '''
             cd terraform
-            ANSIBLE_HOST_KEY_CHECKING=false ansible-playbook -i 10.2.75.200, --extra-vars "$(/opt/go/bin/terraform output -json)" -u root ansible/playbook.yml
+            ANSIBLE_HOST_KEY_CHECKING=false ansible-playbook -i 10.2.75.201, --extra-vars "$(/opt/go/bin/terraform output -json)" -u root ansible/playbook.yml
           '''
         }
       }
