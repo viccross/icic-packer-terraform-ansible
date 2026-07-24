@@ -23,7 +23,7 @@
             node_id = "{{ inventory_hostname }}"
 
             retry_join {
-              leader_api_addr = "{{ vault_leader_addr }}"
+              leader_api_addr = "http://{{ vault_leader_addr }}:8200"
             }
           }
 
