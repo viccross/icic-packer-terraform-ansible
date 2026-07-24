@@ -27,7 +27,7 @@ variable "project" {
 
 variable "availability_zone" {
   type		= string
-  default = "Default Group"
+  default = "ASG1VM2"
 }
 
 variable "leader_ip" {
