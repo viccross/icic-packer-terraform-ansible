@@ -9,5 +9,7 @@
         mode tcp
         option tcplog
         balance roundrobin
-      {% for guest in vault_instances.value | json_query(jsonquery) %}  server {{ guest.vm_name }} {{ guest.ip_address }}:8200 check
+      {% for guest in vault_leader_instances.value | json_query(jsonquery) %}  server {{ guest.vm_name }} {{ guest.ip_address }}:8200 check
+      {% endfor %}
+      {% for guest in vault_follower_instances.value | json_query(jsonquery) %}  server {{ guest.vm_name }} {{ guest.ip_address }}:8200 check
       {% endfor %}
