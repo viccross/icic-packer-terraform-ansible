@@ -77,3 +77,57 @@
           {% else %}
           ✅ Vault is initialized and unsealed.
           {% endif %}
+
+    - name: Init Vault if not initialized
+      ansible.builtin.command:
+        cmd: "{{ vault_install_dir }}/vault operator init -format=yaml"
+      environment:
+        VAULT_ADDR: "http://{{ vault_leader_addr }}:8200"
+      become: true
+      when: vault_health.status == 501
+      register: vault_init
+      changed_when: vault_init.stdout is defined and vault_init.stdout | length > 0
+
+    - name: Parse `vault operator init` output
+      ansible.builtin.set_fact:
+        vault_init_output: "{{ vault_init.stdout | from_yaml }}"
+      when:
+        - vault_health.status == 501
+        - vault_init is defined
+        - vault_init.stdout is defined
+      failed_when: vault_init_output is not defined or vault_init_output.root_token is not defined or vault_init_output.unseal_keys_b64 is not defined
+
+    - name: Store root_token and unseal_keys in Vault leader node
+      ansible.builtin.copy:
+        dest: "/root/.vault_init.yml"
+        owner: root
+        group: root
+        mode: '0600'
+        content: |
+          root_token: "{{ vault_init_output.root_token }}"
+          unseal_keys: "{{ vault_init_output.unseal_keys_b64 }}"
+
+    - name: Refetch Vault status after initialization
+      ansible.builtin.uri:
+        url: "http://{{ vault_leader_addr }}:8200/v1/sys/health"
+        method: GET
+        status_code: [200, 429, 472, 473, 501, 503]
+      register: vault_health
+      retries: 10
+      delay: 3
+      until: vault_health.status in [200, 429, 472, 473, 501, 503]
+
+    - name: Unseal Vault if sealed
+      ansible.builtin.command:
+        cmd: "{{ vault_install_dir }}/vault operator unseal {{ item }}"
+      environment:
+        VAULT_ADDR: "http://{{ vault_leader_addr }}:8200"
+      become: true
+      loop: "{{ vault_init_output.unseal_keys_b64 }}"
+      loop_control:
+        label: "Sensitive data hidden!"
+      when:
+        - vault_health.status == 503
+        - vault_init_output is defined
+        - vault_init_output.unseal_keys_b64 is defined
+      changed_when: true
