@@ -90,3 +90,22 @@
           {% else %}
           ✅ Vault is initialized and unsealed.
           {% endif %}
+
+    - name: Read vault init output from leader node
+      ansible.builtin.slurp:
+        src: "/root/.vault_init.yml"
+      delegate_to: "{{ vault_leader_addr }}"
+      register: vault_init_output
+
+    - name: Unseal Vault if sealed
+      ansible.builtin.command:
+        cmd: "{{ vault_install_dir }}/vault operator unseal {{ item }}"
+      environment:
+        VAULT_ADDR: "http://{{ my_ip_addr }}:8200"
+      become: true
+      loop: "{{ vault_init_output.content.unseal_keys }}"
+      loop_control:
+        label: "Sensitive data hidden!"
+      when: vault_health.status == 503
+      register: vault_unseal
+      changed_when: "'Unsealed' in vault_unseal.stdout"
