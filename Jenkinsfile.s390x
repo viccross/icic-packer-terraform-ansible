@@ -79,6 +79,7 @@ EOFTFRC
           keepAll: false,
           reportDir: 'reports',
           reportFiles: 'zvmguests.html',
+          includes: '**/*.html,**/*.css',
           reportName: 'Terraform infrastructure',
           reportTitles: 'Terraform Report'])
       }
