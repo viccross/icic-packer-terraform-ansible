@@ -13,7 +13,7 @@ data "openstack_networking_network_v2" "network" {
 }
 
 data "openstack_compute_keypair_v2" "my_keypair" {
-  name       = "viccross-unfazed"
+  name       = "viccross-bifrost"
 }
 
 resource "openstack_compute_instance_v2" "zvm_instance" {
