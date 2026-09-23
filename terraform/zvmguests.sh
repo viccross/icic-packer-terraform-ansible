@@ -69,7 +69,7 @@ while true; do
     esac
 done
 
-authtoken=$(curl -s -k -i https://icicmgt1.z.stg.ibm:5000/v3/auth/tokens \
+authtoken=$(curl -s -k -i https://iim1mgt1.z.stg.ibm:5000/v3/auth/tokens \
   -H "Content-Type: application/json" \
   -H "Vary: X-Auth-Token, X-Subject-Token" \
   -H "Accept: application/json" \
@@ -79,7 +79,7 @@ authtoken=$(curl -s -k -i https://icicmgt1.z.stg.ibm:5000/v3/auth/tokens \
 
 tfservers=$(TF_CLI_CONFIG_FILE=.terraform.rc /opt/go/bin/terraform output -json | jq '.[].value |.[]| .vm_name '| paste -sd, -)
 
-guests=$(curl -s -k https://icicmgt1.z.stg.ibm:8774/v2.1/205d7f7dc28c4de692df3acc7439485f/servers/detail \
+guests=$(curl -s -k https://iim1mgt1.z.stg.ibm:8774/v2.1/c9cb6f0288544aad83d5c073b1b40855/servers/detail \
         -H "X-Auth-Token: ${authtoken}" \
         | jq -r --argjson tfservers "[${tfservers}]" ' .servers[] | select([.name] | inside($tfservers)) | "\(.name) \(.["OS-EXT-SRV-ATTR:instance_name"])"' )
 if [[ -z "$guests" ]]; then
@@ -119,6 +119,6 @@ fi
 
 
 # Invalidate the token
-curl -s -k https://icicmgt1.z.stg.ibm:5000/v3/auth/tokens \
+curl -s -k https://iim1mgt1.z.stg.ibm:5000/v3/auth/tokens \
         -H "X-Auth-Token: ${authtoken}" \
         -H "X-Subject-Token: ${authtoken}" -X DELETE
