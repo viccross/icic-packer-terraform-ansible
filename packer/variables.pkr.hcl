@@ -19,7 +19,7 @@ variable "ssh_username" {
 variable "availability_zone" {
   type        = string
   description = "The availability zone where the build will be performed."
-  default     = "Default Group" #openstack availability zone required
+  default     = "Default_Group" #openstack availability zone required
 }
 
 variable "flavor" {

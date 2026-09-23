@@ -27,5 +27,5 @@ variable "project" {
 
 variable "availability_zone" {
   type		= string
-  default = "Default Group"
+  default = "Default_Group"
 }
