@@ -1,0 +1,19 @@
+{
+  "Modules": [
+    {
+      "Key": "",
+      "Source": "",
+      "Dir": "."
+    },
+    {
+      "Key": "zvm_haproxy_guests",
+      "Source": "./modules/icic_haproxy_vm",
+      "Dir": "modules/icic_haproxy_vm"
+    },
+    {
+      "Key": "zvm_httpd_guests",
+      "Source": "./modules/icic_httpd_vm",
+      "Dir": "modules/icic_httpd_vm"
+    }
+  ]
+}
