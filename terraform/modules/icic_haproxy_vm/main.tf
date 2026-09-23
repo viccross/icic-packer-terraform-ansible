@@ -30,7 +30,7 @@ resource "openstack_compute_instance_v2" "zvm_instance" {
   connection {
     type     = "ssh"
     user     = "root"
-    private_key = file("~/.ssh/id_viccross-unfazed")
+    private_key = file("~/.ssh/id_ed25519")
     host     = self.access_ip_v4
   }
 
