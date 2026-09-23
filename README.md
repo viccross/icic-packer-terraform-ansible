@@ -1,7 +1,7 @@
-# HashiCorp and IBM Cloud Infrastructure Center
+# HashiCorp and IBM Infrastructure Management for Z and LinuxONE
 
-This repo contains a set of Packer, Terraform, and Ansible configurations that demonstrate working with IBM Cloud Infrastructure Center.
-The demo has three components:
+This repo contains a set of Packer, Terraform, and Ansible configurations that demonstrate working with IBM Infrastructure Management for Z and LinuxONE.
+The demo has four components:
 
 - Image creation using Packer (and Ansible)
 - Infrastructure deployment using Terraform
@@ -13,8 +13,8 @@ More about the Jenkins pipeline can be found in [JENKINS.md](JENKINS.md).
 
 ## Requirements
 This demo depends on a local installation of Terraform, Packer, and Ansible.
-It makes use of IBM Cloud Infrastructure Center through the OpenStack providers in Packer and Terraform.
-The ICIC instance must have an existing deployable Linux image (our example is based on RHEL 8).
+It makes use of IBM Infrastructure Management through the OpenStack providers in Packer and Terraform.
+The IIM instance must have an existing deployable Linux image (our example is based on RHEL 8).
 
 ## Demo stages
 The stages of the demo are described here.
@@ -24,7 +24,7 @@ Using a pre-existing Linux image, Packer creates new images containing:
 
 - Apache HTTP Server and PHP, along with a test file (a file that runs `phpinfo()`);
 - HAProxy, with a base configuration to enable the statistics web page.
-The images become deployable in ICIC.
+The images become deployable in IIM.
 
 Packer instatiates the base image nominated in the configuration, then uses its Ansible provider to run a playbook that performs the appropriate installation and customisation tasks.
 It then creates new images from the instatiated VMs, destroying the VMs once the images are saved.
@@ -44,8 +44,8 @@ If you have the pre-requisite resources, you can give the demo a try.
 
 ### Stage 0: Setup
 
-- Make sure your ICIC user-ID has an associated SSH key pair defined.
-  When logged-on to ICIC, click your user name (and project) in the top-right of the screen.
+- Make sure your IIM user-ID has an associated SSH key pair defined.
+  When logged-on to IIM, click your user name (and project) in the top-right of the screen.
   From the menu that appears, select "Key pairs".
   If you have a key that is listed here and is usable from the machine you will run the demo from, make a note of the name of the key-pair.
   If none of the listed key-pairs is usable from the machine you will run the demo from, or there are no key-pairs listed, do the following:
@@ -60,7 +60,7 @@ If you have the pre-requisite resources, you can give the demo a try.
   - Paste the public key into the "Public Key" field.
   - In the "Key pair name" field, type a convenient name for the key-pair.
     Make a note of the name, as you will need it for the Terraform configuration.
-  - Press the "Import Key Pair" button to save the key-pair into ICIC.
+  - Press the "Import Key Pair" button to save the key-pair into IIM.
 
 - Clone the repository:
   ```
@@ -75,11 +75,11 @@ If you have the pre-requisite resources, you can give the demo a try.
   ```
 - Update the variables in the Packer config `variables.pkr.hcl` to reflect your environment.
   You will need to update:
-  - Details for your ICIC instance (credentials, tenant, etc).
+  - Details for your IIM instance (credentials, tenant, etc).
   - The source image name to be used as a base.
-  - Details of the target images, including the ICIC network.
+  - Details of the target images, including the IIM network.
     It is a Packer/OpenStack requirement that the network identifier be the UUID of the network as known to OpenStack and not the readable network name.
-    You can obtain the UUID of the network using the ICIC web interface, or by using an appropriate ICIC/OpenStack CLI command.
+    You can obtain the UUID of the network using the IIM web interface, or by using an appropriate IIM/OpenStack CLI command.
 - Run Packer
   ```
   $ packer init .
@@ -109,7 +109,17 @@ In the ICIC UI you should be able to see two new images.
   ```
   When prompted, enter "yes" to approve.
 
-At this point you will be able to see four new VMs in the ICIC UI.
+> Note: Running this on s390x with OSS Terraform will require some change.
+> Since HashiCorp does not provide publically (freely) available binaries for Terraform or any of the provider plugins, you will need to build these from source.
+> This is outside the scope of this guide.
+> Once you've built your terraform and provider binaries, place them in your executable path.
+> Then, when you run `terraform`, you will need to configure it in 'developer override' mode to point to the locally-built provider binaries.
+> The `Jenkinsfile` in this repo gives guidance on how to do this.
+> Importantly, do NOT run `terraform init` in developer mode; it's not needed and might break stuff.
+>
+> If you run this on an architecture for which HashiCorp provides publically (freely) available binaries, you don't need to do anything special like this!
+
+At this point you will be able to see four new VMs in the IIM UI.
 Looking at the details of those VMs, you will see that the "Deployed image" field is the image created by Packer for the type of VM being inspected ("haproxy" or "httpd").
 
 You should also be able to go to `http://<haproxy-ip-address>:8404/stats` to see the HAProxy statistics page.
