@@ -9,11 +9,11 @@ data "openstack_compute_flavor_v2" "size" {
 }
 
 data "openstack_networking_network_v2" "network" {
-  name = "StLeoLAN75"
+  name = "Internal"
 }
 
 data "openstack_compute_keypair_v2" "my_keypair" {
-  name       = "valhalla-keypair"
+  name       = "viccross-unfazed"
 }
 
 resource "openstack_compute_instance_v2" "zvm_instance" {

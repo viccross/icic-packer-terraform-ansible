@@ -1,4 +1,4 @@
-# Packer on IBM Cloud Infrastucture Center
+# Packer on IBM Infrastucture Management
 
 ```zsh
 # on mac only

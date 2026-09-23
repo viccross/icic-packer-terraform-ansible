@@ -20,7 +20,7 @@ locals {
 }
 
 
-source "openstack" "infra_cloud_center" {
+source "openstack" "ibm_infra_management" {
   identity_endpoint = var.identity_endpoint
   username          = var.username
   password          = var.password
@@ -60,11 +60,11 @@ build {
     ]
   }
 
-  source "source.openstack.infra_cloud_center" {
+  source "source.openstack.ibm_infra_management" {
     name       = "httpd_build"
     image_name = local.httpd_build_name
   }
-  source "source.openstack.infra_cloud_center" {
+  source "source.openstack.ibm_infra_management" {
     name       = "haproxy_build"
     image_name = local.haproxy_build_name
   }

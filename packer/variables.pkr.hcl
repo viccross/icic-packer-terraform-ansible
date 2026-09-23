@@ -31,7 +31,7 @@ variable "flavor" {
 variable "identity_endpoint" {
   type        = string
   description = "The OpenStack identity endpoint."
-  default     = "https://icicmgt1.z.stg.ibm/icic/openstack/identity/v3"
+  default     = "https://iim1mgt1.z.stg.ibm/iim/openstack/identity/v3"
 }
 
 variable "username" {
@@ -71,5 +71,5 @@ variable "insecure" {
 
 variable "networks" {
   type    = list(string)
-  default = ["f0159cc1-07ea-4adb-be06-a454fa467d03"]
+  default = ["6088b1c2-920e-40ed-8e02-5992346c6a14"]
 }
