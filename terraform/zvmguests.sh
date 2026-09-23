@@ -92,7 +92,7 @@ if [[ "$action" == "web" ]]; then
     echo "body { font-family: \"IBM Plex Sans\", Helvetica, Arial, sans-serif; margin: 20px; } h1 { color: #333; } pre { background-color: #f4f4f4; padding: 10px; border-radius: 5px; } a { color: #007BFF; text-decoration: none; } a:hover { text-decoration: underline; }" > zvmguests.css
     echo "<!DOCTYPE html>" > zvmguests.html
     echo "<html lang=\"en\"><head><meta charset=\"UTF-8\">" >> zvmguests.html
-    echo '<link rel="stylesheet" type="text/css" href="zvmguests.css">' >> zvmguests.html
+    echo '<link rel="stylesheet" type="text/css" href="zvmguests.css" />' >> zvmguests.html
     echo "<title>z/VM Guests by Terraform and IIM</title></head><body>" >> zvmguests.html
     echo "<h1>z/VM Guests by Terraform and IIM</h1><p>The z/VM guests currently managed by Terraform are listed below:</p>" >> zvmguests.html
     echo "<pre>" >> zvmguests.html
